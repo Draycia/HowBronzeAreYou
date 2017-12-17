@@ -1,21 +1,52 @@
 doctype html
 html(lang='en')
   head
-    title AAAAAAAAAAA
+    title How Bronze Are You?
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    link(href='https://fonts.googleapis.com/css?family=Archivo+Narrow:400,400i,500,500i,600,600i,700,700i', rel='stylesheet')
     link(href='stylesheets/style.css', rel='stylesheet')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    script(src='javascripts/main.js')
+    script.
+      $(function() {
+        function getTextWidth(text, font) {
+          var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+          var context = canvas.getContext("2d");
+          context.font = font;
+          var metrics = context.measureText(text);
+          return metrics.width;
+        }
+        var width = getTextWidth("#{summonerName}", "bold 53px Chronic Sans");
+        if (width < 225) width = 225;
+        $("#bronze-thingy").css({'width' : width + "px"});
+      });
   body.comic-sans
+    nav.navbar.navbar-default
+      .container-fluid
+        .navbar-header
+          a.navbar-brand(href='#') How Bronze Are You?
+        ul.nav.navbar-nav
+          li
+            a(href='/') Home
+          li
+            a(href='https://github.com/Draycia/HowBronzeAreYou') Github
+        ul.nav.navbar-nav.navbar-right
+          a(href='#')
+            form.navbar-form.navbar-left(action='/', method="GET")
+                .input-group
+                    input.search-query.form-control(type='text', placeholder='Search', name="summonerName")
+                    |     
+                    .input-group-btn
+                      button.btn.btn-default(type='submit')
+                        i.glyphicon.glyphicon-search
     .container
-      header
-        
       .text-center
-        h1.summonerName= summonerName
-        img(src='https://i.imgur.com/Lc8Pe9R.png')
+        h1#summonerName= summonerName
+        img#bronze-thingy(src='https://i.imgur.com/Lc8Pe9R.png')
         hr
         p This is some text.
-    footer.text-center How Bronze Are You? isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
+    footer.footer
+      .container
+        .text-center How Bronze Are You? isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
