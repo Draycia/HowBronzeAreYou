@@ -45,16 +45,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   if (req.query.summonerName) {
-    res.render('summoner', { summonerName: req.query.summonerName });
+    request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
+      res.render('summoner', { summonerName: req.query.summonerName, verion: JSON.parse(body)[0], wardCount: 8, pinkCount: 2 });
+    });
   } else {
     res.render('index');
   }
-});
-
-app.get('/api/versions/ddragon', (req, res) => {
-  request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
-    res.send(JSON.parse(body)[0]);
-  });
 });
 
 app.use(function (req, res, next) {
