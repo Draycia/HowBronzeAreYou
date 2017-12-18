@@ -10,7 +10,7 @@ let region = "NA1"
  * This will be converted to getMatchlist in the future.
  */
 
-export async function getMatch(summonerName) {
+async function getMatch(summonerName) {
   let dataObject = {
     "summonerInfo": {},
     "match": {
@@ -31,6 +31,7 @@ export async function getMatch(summonerName) {
       // Fill the object with the info needed
       dataObject.summonerInfo.name = summonerInfo.name;
       dataObject.summonerInfo.iconId = summonerInfo.profileIconId;
+      dataObject.match.gameDuration = match.gameDuration
       dataObject.match.queueId = match.queueId;
       dataObject.match.mapId = match.mapId;
       dataObject.match.championId = match.participants[arrIndex].championId;
@@ -48,9 +49,14 @@ export async function getMatch(summonerName) {
       dataObject.match.totalDamageDealt = stats.totalDamageDealt;
       dataObject.match.goldEarned = stats.goldEarned;
       dataObject.match.wardsPlaced = stats.wardsPlaced;
+      dataObject.match.pinksPlaced = stats.visionWardsBoughtInGame;
 
       return dataObject;
     }
   }
 
+}
+
+module.exports = {
+  getMatch: getMatch
 }
