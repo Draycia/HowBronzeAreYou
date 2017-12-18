@@ -1,18 +1,18 @@
-var express = require('express');
-var stylus = require('stylus')
-var nib = require('nib')
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var compression = require('compression');
-var minify = require('express-minify');
-var request = require('request');
+const express = require('express');
+const stylus = require('stylus')
+const nib = require('nib')
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const compression = require('compression');
+const minify = require('express-minify');
+const request = require('request');
 
-var publicDir = path.join(__dirname, 'public');
-var date = new Date();
-var app = express();
+const publicDir = path.join(__dirname, 'public');
+const date = new Date();
+const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -44,7 +44,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // });
 
 app.get('/', (req, res) => {
-  getVersion();
   if (req.query.summonerName) {
     res.render('summoner', { summonerName: req.query.summonerName });
   } else {
@@ -59,7 +58,7 @@ app.get('/api/versions/ddragon', (req, res) => {
 });
 
 app.use(function (req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
@@ -71,4 +70,4 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-module.exports = app; y
+module.exports = app;
