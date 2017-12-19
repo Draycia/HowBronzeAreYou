@@ -14,18 +14,20 @@
 				"express-minify": "^1.0.0",
 				"greenlock-express": "^2.0.12",
 				"jQuery": "^1.7.4",
-				"mongodb": "^2.2.25",
-				"mongoose": "^4.12.5",
+				"mongodb": "^2.2.33",
+				"mongoose": "^4.13.7",
 				"monk": "^4.0.0",
 				"morgan": "~1.7.0",
 				"nib": "^1.1.2",
+				"path": "^0.12.7",
 				"pug": "^2.0.0-rc.4",
 				"request": "^2.83.0",
 				"serve-favicon": "~2.3.2",
-				"stylus": "^0.54.5"
+				"stylus": "^0.54.5",
+				"TeemoJS": "^1.1.0"
 		},
 		"devDependencies": {
-				"@types/node": "^8.0.34",
-				"typescript": "^2.5.3"
+				"@types/node": "^8.5.1",
+				"typescript": "^2.6.2"
 		}
 }
