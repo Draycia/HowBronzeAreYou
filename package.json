@@ -24,7 +24,7 @@
 				"request": "^2.83.0",
 				"serve-favicon": "~2.3.2",
 				"stylus": "^0.54.5",
-				"TeemoJS": "^1.1.0"
+				"teemojs": "^1.1.0-alpha3"
 		},
 		"devDependencies": {
 				"@types/node": "^8.5.1",

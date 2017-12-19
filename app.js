@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const minify = require('express-minify');
 const request = require('request');
+const api = require('./bin/util.js');
 
 const publicDir = path.join(__dirname, 'public');
 const date = new Date();
@@ -43,10 +44,45 @@ app.use(express.static(path.join(__dirname, 'public')));
 //     return next();
 // });
 
+proData = {
+  summonerInfo: { name: 'aphromoo', iconId: 3156 },
+  match:
+    {
+      perks:
+        {
+          perk0Id: 8229,
+          perk1Id: 8226,
+          perk2Id: 8234,
+          perk3Id: 8237,
+          perk4Id: 8345,
+          perk5Id: 8304
+        },
+      gameDuration: 1275,
+      queueId: 420,
+      mapId: 11,
+      championId: 101,
+      spell1Id: 3,
+      spell2Id: 4,
+      kills: 3,
+      deaths: 5,
+      assists: 3,
+      totalDamageDealt: 21141,
+      goldEarned: 6069,
+      wardsPlaced: 17,
+      pinksPlaced: 5
+    }
+}
+
 app.get('/', (req, res) => {
   if (req.query.summonerName) {
-    request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
-      res.render('summoner', { summonerName: req.query.summonerName, verion: JSON.parse(body)[0], wardCount: 8, pinkCount: 2 });
+    let region = '';
+    if (req.query.region) region = req.query.region;
+    else region = "NA1";
+
+    api.getMatch(req.query.summonerName, region).then(userData => {
+      request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
+        res.render('summoner', { version: JSON.parse(body)[0], userData: userData, proData: proData });
+      });
     });
   } else {
     res.render('index');

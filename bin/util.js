@@ -2,15 +2,12 @@ const config = require("./configuration.js")
 const TeemoJS = require("teemojs")
 const api = new TeemoJS(config.key)
 
-// Default region
-let region = "NA1"
-
 /*
  * For now, we're only getting one match.
  * This will be converted to getMatchlist in the future.
  */
 
-async function getMatch(summonerName) {
+async function getMatch(summonerName, region) {
   let dataObject = {
     "summonerInfo": {},
     "match": {
