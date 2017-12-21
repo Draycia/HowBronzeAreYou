@@ -10,6 +10,7 @@ const compression = require('compression');
 const minify = require('express-minify');
 const request = require('request');
 const api = require('./bin/util.js');
+const noBots = require('express-nobots');
 
 const publicDir = path.join(__dirname, 'public');
 const date = new Date();
@@ -23,6 +24,8 @@ function compile(str, path) {
     .set('filename', path)
     .use(nib())
 }
+
+app.use(noBots());
 
 app.use(stylus.middleware({
   src: __dirname + '/public',
