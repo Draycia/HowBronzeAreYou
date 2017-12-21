@@ -47,7 +47,7 @@ html(lang='en')
                 .input-group-btn
                   button.btn.btn-default(type='submit')
                     i.glyphicon.glyphicon-search
-              select#inputRegion.form-control(name='region')
+              select#inputRegion.form-control.fix-region-button(name='region')
                 option(selected='', value='NA1') NA
                 option(value='EUW1') EUW
     .container
@@ -57,31 +57,22 @@ html(lang='en')
         br
         img#profile-icon(src='http://ddragon.leagueoflegends.com/cdn/' + version + '/img/profileicon/' + userData.summonerInfo.iconId + '.png', width='150px')
         hr
-        svg#pink-wards.donut-graph
+        svg#pink-wards
         if (userData.match.pinksPlaced < proData.match.pinksPlaced)
-          p You might have an above par winrate against Shaco if you spent a little extra gold... Your pink ward count was #{userData.match.pinksPlaced} and Aphromoo's was #{proData.match.pinksPlaced}.
-          br
-          if (userData.match.pinksPlaced == 0)
-            p You scored Bronze 5. 75g to spare your life is worth imo.
-          else
-            p You scored Bronze 4. I'd suggest banning stealth champs in the meantime.
+          p You might have an above par winrate against Shaco if you spent a little extra gold... Your pink ward count was #{userData.match.pinksPlaced} and the average Challenger player's is #{proData.match.pinksPlaced}.
         else
-          p Are you even placing those correctly? Your pink ward count was #{userData.match.pinksPlaced} and Aphromoo's was #{proData.match.pinksPlaced}.
+          p Are you even placing those correctly? Your pink ward count was #{userData.match.pinksPlaced} and the average Challenger player's is #{proData.match.pinksPlaced}.
           br
-          p You scored Bronze 2. Maybe you should hire someone to help with your budgeting. 
+        p You scored Bronze #{scores.pinksPlaced}. #{messages.pinksPlaced}
         hr
-        svg#green-wards.donut-graph
+        svg#green-wards
         if (userData.match.wardsPlaced < proData.match.wardsPlaced)
-          p No wonder you struggle against Rengar... Your ward count was #{userData.match.wardsPlaced} and Aphromoo's was #{proData.match.wardsPlaced}.
-          br
-          if (userData.match.wardsPlaced == 0)
-            p You scored Bronze 5. Wards are free, ya know.
-          else
-            p You scored Bronze 4. At least you placed some wards... 
+          p No wonder you struggle against Rengar... Your ward count was #{userData.match.wardsPlaced} and the average Challenger player's is #{proData.match.wardsPlaced}.
         else
-          p Do bronze players even make use of sight? Your ward count was #{userData.match.wardsPlaced} and Aphromoo's was #{proData.match.wardsPlaced}.
+          p Sitting in the fountain spamming sightstone isn't something to be proud of. Your ward count was #{userData.match.wardsPlaced} and the average Challenger player's is #{proData.match.wardsPlaced}.
           br
-          p You scored Bronze 1. I guess your teammates are holding you back.
+        p You scored Bronze #{scores.wardsPlaced}. #{messages.wardsPlaced}
+        hr
     footer.footer
       .container
         .text-center
