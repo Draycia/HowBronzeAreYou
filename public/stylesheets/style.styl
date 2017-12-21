@@ -66,11 +66,12 @@ url("/fonts/FantasqueSansMono-Regular.svg") format("svg")
     display inline-block
 
 footer
-    position fixed
-    bottom 0
     width 100%
     font-family Arial, Helvetica, sans-serif
 
-//.donut-graph
-//    width 200px
-//    height 100px
+.footer-absolute
+    bottom 0
+    position absolute
+
+.fix-region-button
+    transform translateY(1px) // Why is this necessary? Why is the div shifted up one pixel without this? Chrome pls.
