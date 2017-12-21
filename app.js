@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const minify = require('express-minify');
 const request = require('request');
-const api = require('./bin/util.js');
+const util = require('./bin/util.js');
 const noBots = require('express-nobots');
 
 const publicDir = path.join(__dirname, 'public');
@@ -72,7 +72,8 @@ proData = {
       totalDamageDealt: 21141,
       goldEarned: 6069,
       wardsPlaced: 17,
-      pinksPlaced: 5
+      pinksPlaced: 5,
+      creepScore: 100
     }
 }
 
@@ -82,10 +83,20 @@ app.get('/', (req, res) => {
     if (req.query.region) region = req.query.region;
     else region = "NA1";
 
-    api.getMatch(req.query.summonerName, region).then(userData => {
-      request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
-        res.render('summoner', { version: JSON.parse(body)[0], userData: userData, proData: proData });
-      });
+    util.getMatch(req.query.summonerName, region).then(userData => {
+      if (userData.status == 0) {
+        request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
+            let scores = util.getAllScores(userData, proData);
+            let messages = util.getMessages(scores);
+            res.render('summoner', { version: JSON.parse(body)[0], userData: userData, proData: proData, scores: scores, messages: messages });
+        });
+      } else if (userData.status == 1) {
+        res.render('errors', { error: "Seems that summoner doesn't exist..." });
+      } else if (userData.status == 2) {
+        res.render('errors',  { error: "Seems that summoner doesn't have any recent games on Summoner's Rift..." });
+      } else {
+        res.render('error');
+      }
     });
   } else {
     res.render('index');
