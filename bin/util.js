@@ -1,13 +1,24 @@
 const config = require("./configuration.js")
 const TeemoJS = require("teemojs")
 const api = new TeemoJS(config.key)
+const cGG = new TeemoJS(config.cGGKey, TeemoJS.championGGConfig)
+const fs = require("fs")
+// Default region
+let region = "NA1"
 
 /*
  * For now, we're only getting one match.
  * This will be converted to getMatchlist in the future.
  */
 
-async function getMatch(summonerName, region) {
+function decimalRound(number, precision){
+  let factor = Math.pow(10, precision);
+  let tempNumber = number * factor;
+  let roundedTempNumber = Math.round(tempNumber);
+  return roundedTempNumber / factor;
+}
+
+async function getMatch(summonerName) {
   let dataObject = {
     "summonerInfo": {},
     "match": {
@@ -16,7 +27,17 @@ async function getMatch(summonerName, region) {
   }
   let summonerInfo = await api.get(region, "summoner.getBySummonerName", summonerName);
   let matchlist = await api.get(region, "match.getMatchlist", summonerInfo.accountId, { beginIndex: 0, endIndex: 20 });
-  let match = await api.get(region, "match.getMatch", matchlist.matches[0].gameId);
+
+  let queue5v5;
+  for(let i = 0; i < 20; i++) {
+    if(matchlist.matches[i].queue >= 400 && matchlist.matches[i].queue <= 440) {
+      queue5v5 = i;
+      break;
+    }
+    if (matchlist.matches[19].queue !== queue5v5) return;
+  }
+
+  let match = await api.get(region, "match.getMatch", matchlist.matches[queue5v5].gameId);
   let arrIndex;
   let stats;
   for(let i = 0; i < match.participantIdentities.length; i++) {
@@ -51,9 +72,42 @@ async function getMatch(summonerName, region) {
       return dataObject;
     }
   }
-
 }
 
+function createChampFile() {
+  cGG.get("champion.getAllChampions", {"champData": ["kda", "damage", "minions", "wards", "goldEarned"]}).then(data => {
+    let dumpObjects = []
+    let matchArray = []
+
+    for(let temp in data) {
+      let champId = data[temp]._id.championId
+      let ezData = data[temp]
+      if(!data.hasOwnProperty(temp)) continue
+      if(!matchArray.includes(champId)) {
+        matchArray += champId
+
+        dumpObjects[`${champId}`] = {}
+
+        dumpObjects[`${champId}`].champId = champId
+        dumpObjects[`${champId}`].winRate = decimalRound(ezData.winRate, 2)
+        dumpObjects[`${champId}`].kills = decimalRound(ezData.kills, 1)
+        dumpObjects[`${champId}`].deaths = decimalRound(ezData.deaths, 1)
+        dumpObjects[`${champId}`].assists = decimalRound(ezData.assists, 1)
+        dumpObjects[`${champId}`].creepScore = decimalRound(ezData.minionsKilled, 1)
+        dumpObjects[`${champId}`].wardsPlaced = decimalRound(ezData.wardPlaced, 1)
+        dumpObjects[`${champId}`].goldEarned = Math.round(ezData.goldEarned)
+      } else if(matchArray.includes(champId)) {
+        console.log("there was a repeat")
+      } else {
+        console.log("lol that screwed")
+
+      }
+    }
+    console.log(dumpObjects)
+  })
+}
+
+
 module.exports = {
-  getMatch: getMatch
+  getMatch: getMatch,
 }
