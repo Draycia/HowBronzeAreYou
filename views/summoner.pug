@@ -11,10 +11,9 @@ html(lang='en')
     script(src='javascripts/outdated.d3.js')
     script(src='javascripts/main.js')
     script.
-      var pinkData = [{"label": "You", "value": '#{pinkCount}'}, 
-        {"label": "Pro", "value": '10'}];
-      var wardData = [{"label": "You", "value": '#{wardCount}'}, 
-        {"label": "Pro", "value": '21'}];
+      var pinkData = [{"label": "You", "value": #{userData.match.pinksPlaced}}, {"label": "Pro", "value": #{proData.match.pinksPlaced}}];
+      var wardData = [{"label": "You", "value": #{userData.match.wardsPlaced}}, {"label": "Pro", "value": #{proData.match.wardsPlaced}}];
+      var goldData = [{"label": "You", "value": #{userData.match.goldEarned}}, {"label": "Pro", "value": #{proData.match.goldEarned}}];
       $(function() {
         showHalfPiGraph(pinkData, "#pink-wards");
         showHalfPiGraph(wardData, "#green-wards");
@@ -25,9 +24,9 @@ html(lang='en')
             var metrics = context.measureText(text);
             return metrics.width;
         }
-        var width = getTextWidth("sefdethb", "bold 53px Chronic Sans");
+        var width = getTextWidth("#{userData.summonerInfo.name}", "bold 53px Chronic Sans");
         if (width < 225) width = 225;
-        $("#bronze-thingy").css({ 'width': width + "px" });
+        $("#bronze-thingy").css({ 'width': width + 35 + "px" });
       });
   body.comic-sans
     nav.navbar.navbar-default
@@ -49,25 +48,40 @@ html(lang='en')
                   button.btn.btn-default(type='submit')
                     i.glyphicon.glyphicon-search
               select#inputRegion.form-control(name='region')
-                option(selected='', value='NA') NA
-                option(value='EUW') EUW
-
-
+                option(selected='', value='NA1') NA
+                option(value='EUW1') EUW
     .container
       .text-center
-        h1#summonerName sefdethb
+        h1#summonerName= userData.summonerInfo.name
         img#bronze-thingy(src='https://i.imgur.com/Lc8Pe9R.png', style='width: 225px;')
         br
-        img#profile-icon(src='http://ddragon.leagueoflegends.com/cdn/7.24.2/img/profileicon/588.png')
+        img#profile-icon(src='http://ddragon.leagueoflegends.com/cdn/' + version + '/img/profileicon/' + userData.summonerInfo.iconId + '.png', width='150px')
         hr
         svg#pink-wards.donut-graph
-        if (userWardCount < proWardCount)
-          p You might have an above par against Shaco if you spent a little extra gold... Your pink ward count was #{pinkCount} and Aphromoo's was 10.
+        if (userData.match.pinksPlaced < proData.match.pinksPlaced)
+          p You might have an above par winrate against Shaco if you spent a little extra gold... Your pink ward count was #{userData.match.pinksPlaced} and Aphromoo's was #{proData.match.pinksPlaced}.
+          br
+          if (userData.match.pinksPlaced == 0)
+            p You scored Bronze 5. 75g to spare your life is worth imo.
+          else
+            p You scored Bronze 4. I'd suggest banning stealth champs in the meantime.
         else
-          p You must've thought you were playing lee sin. Your ward count was #{pinkCount} and Aphromoo's was 10.
+          p Are you even placing those correctly? Your pink ward count was #{userData.match.pinksPlaced} and Aphromoo's was #{proData.match.pinksPlaced}.
+          br
+          p You scored Bronze 2. Maybe you should hire someone to help with your budgeting. 
         hr
         svg#green-wards.donut-graph
-        p No wonder you struggle against Rengar... Your ward count was #{wardCount} and Aphromoo's was 21.
+        if (userData.match.wardsPlaced < proData.match.wardsPlaced)
+          p No wonder you struggle against Rengar... Your ward count was #{userData.match.wardsPlaced} and Aphromoo's was #{proData.match.wardsPlaced}.
+          br
+          if (userData.match.wardsPlaced == 0)
+            p You scored Bronze 5. Wards are free, ya know.
+          else
+            p You scored Bronze 4. At least you placed some wards... 
+        else
+          p Do bronze players even make use of sight? Your ward count was #{userData.match.wardsPlaced} and Aphromoo's was #{proData.match.wardsPlaced}.
+          br
+          p You scored Bronze 1. I guess your teammates are holding you back.
     footer.footer
       .container
         .text-center
