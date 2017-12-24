@@ -48,7 +48,8 @@ async function getMatch(summonerName, region) {
     "match": {
       "perks": {}
     },
-    "status": 0
+    "status": 0,
+    "isSet": false
   }
   let summonerInfo = await api.get(region, "summoner.getBySummonerName", summonerName);
 
@@ -108,6 +109,7 @@ async function getMatch(summonerName, region) {
       return dataObject;
     }
   }
+  return dataObject;
 }
 
 function getAllScores(userData, proData) {
