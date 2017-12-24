@@ -17,6 +17,8 @@ const publicDir = path.join(__dirname, 'public');
 const date = new Date();
 const app = express();
 
+util.init();
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
@@ -83,7 +85,7 @@ proData = {
 app.get('/', (req, res) => {
   if (req.query.summonerName) {
     let region = '';
-    if (req.query.region) region = req.query.region;
+    if (req.subdomains[0]) region = util.getRegion(req.subdomains[0]);
     else region = "NA1";
 
     util.getMatch(urlencode(req.query.summonerName), region).then(userData => {
@@ -93,15 +95,20 @@ app.get('/', (req, res) => {
       }
 
       if (userData.status == 0) {
-        request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
-            let scores = util.getAllScores(userData, proData);
-            let messages = util.getMessages(scores);
-            res.render('summoner', { version: JSON.parse(body)[0], userData: userData, proData: proData, scores: scores, messages: messages });
-        });
+        //console.log(userData);
+        let scores = util.getAllScores(userData, proData);
+        let messages = util.getMessages(scores);
+        let userKDA = util.getKDA(userData);
+        let proKDA = util.getKDA(proData);
+        let rank = util.getAverageScore(scores);
+        let userKeystone = util.getKeystoneName(userData);
+        let proKeystone = util.getKeystoneName(proData);
+        let version = util.getVersion();
+        res.render('summoner', { version: version, userData: userData, proData: proData, scores: scores, messages: messages, userKDA: userKDA, proKDA: proKDA, rank: rank, userKeystone: userKeystone, proKeystone: proKeystone });
       } else if (userData.status == 1) {
         res.render('errors', { error: "Seems that summoner doesn't exist..." });
       } else if (userData.status == 2) {
-        res.render('errors',  { error: "Seems that summoner doesn't have any recent games on Summoner's Rift..." });
+        res.render('errors', { error: "Seems that summoner doesn't have any recent games on Summoner's Rift..." });
       } else {
         res.render('error');
       }
