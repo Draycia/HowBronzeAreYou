@@ -106,6 +106,9 @@ async function getMatch(summonerName, region) {
       dataObject.match.pinksPlaced = stats.visionWardsBoughtInGame;
       dataObject.match.creepScore = stats.totalMinionsKilled;
 
+      // Set isSet to true, this defaults to 0 in case as an exception
+      dataObject.isSet = true;
+
       return dataObject;
     }
   }
