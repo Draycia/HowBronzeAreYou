@@ -22,10 +22,13 @@
 				"nib": "^1.1.2",
 				"path": "^0.12.7",
 				"pug": "^2.0.0-rc.4",
+				"repeat": "0.0.6",
 				"request": "^2.83.0",
 				"serve-favicon": "~2.3.2",
 				"stylus": "^0.54.5",
-				"teemojs": "^1.1.0-alpha3"
+				"teemojs": "^1.1.0-alpha3",
+				"urlencode": "^1.1.0",
+				"wildcard-subdomains": "^1.1.0"
 		},
 		"devDependencies": {
 				"@types/node": "^8.5.1",
