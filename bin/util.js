@@ -89,6 +89,8 @@ async function getMatch(summonerName, region) {
       dataObject.match.queueId = match.queueId;
       dataObject.match.mapId = match.mapId;
       dataObject.match.championId = match.participants[arrIndex].championId;
+      dataObject.match.perks.mainPerk = stats.perkPrimaryStyle;
+      dataObject.match.perks.subPerk = stats.perkSubStyle;
       dataObject.match.perks.perk0Id = stats.perk0;
       dataObject.match.perks.perk1Id = stats.perk1;
       dataObject.match.perks.perk2Id = stats.perk2;
@@ -125,6 +127,7 @@ function getAllScores(userData, proData) {
   dataObject.wardsPlaced = getScore(userData.match.wardsPlaced, proData.match.wardsPlaced);
   dataObject.creepScore = getScore(userData.match.creepScore, proData.match.creepScore);
   dataObject.kda = getScoreByKDA(userKDA, proKDA);
+  dataObject.runes = getScoreByRunes(userData, proData);
 
   return dataObject;
 }
@@ -156,14 +159,51 @@ function getScoreByKDA(userKDA, proKDA) {
   return getScore(userKDA * 10, proKDA * 10);
 }
 
+// Even lesser magic
+function getScoreByRunes(userData, proData) {
+  let matches = 0;
+  for (let i = 0; i < 6; i++) {
+    if (userData.match.perks["perk" + i + "Id"] === proData.match.perks["perk" + i + "Id"]) {
+      matches++;
+    }
+  }
+  return getScore(matches, 6);
+}
+
+
+function getKDA(userData) {
+  return ((userData.match.kills + userData.match.assists) / userData.match.deaths).toFixed(2);
+}
+
 function getMessages(scores) {
   let messageObject = {}
 
   messageObject.pinksPlaced = messages.pinks[scores.pinksPlaced];
   messageObject.wardsPlaced = messages.wards[scores.wardsPlaced];
   messageObject.kda = messages.kda[scores.kda];
+  messageObject.runes = messages.runes[scores.runes];
 
   return messageObject;
+}
+
+// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+function getKeystoneName(userData) {
+  let keystoneType = userData.match.perks.mainPerk;
+  let keystoneId = userData.match.perks.perk0Id;
+  for (let i = 0; i < Object.keys(runesReforged).length; i++) {
+    let type = runesReforged[i];
+    if (type.id == keystoneType) {
+      for (let j = 0; j < Object.keys(type.slots).length; j++) {
+        let runes = type.slots[j].runes;
+        for (let k = 0; k < Object.keys(runes).length; k++) {
+          let rune = runes[k];
+          if (rune.id == keystoneId) {
+            return rune.name;
+          }
+        }
+      }
+    }
+  }
 }
 
 module.exports = {
@@ -171,4 +211,5 @@ module.exports = {
   getAllScores: getAllScores,
   getAverageScore: getAverageScore,
   getMessages: getMessages
+  getKeystoneName: getKeystoneName,
 }
