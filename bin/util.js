@@ -62,7 +62,7 @@ async function getMatch(summonerName, region) {
 
   let queue5v5;
   for(let i = 0; i < 20; i++) {
-    if(queues.includes(matchlist.matches[i].queue)) {
+    if(queues.includes(matchlist.matches[i].queue) && matchlist.matches[i].platformId == region.toUpperCase()) {
       queue5v5 = i;
       break;
     }
@@ -77,7 +77,7 @@ async function getMatch(summonerName, region) {
   let arrIndex;
   let stats;
   for(let i = 0; i < match.participantIdentities.length; i++) {
-    if(summonerInfo.accountId === match.participantIdentities[i].player.accountId) {
+    if(summonerInfo.accountId === match.participantIdentities[i].player.currentAccountId) {
       // arrIndex is used for easiness in finding the plater in participant arrays
       // stats is used for laziness tbh
       arrIndex = match.participantIdentities[i].participantId - 1
