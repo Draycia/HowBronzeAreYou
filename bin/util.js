@@ -3,6 +3,35 @@ const TeemoJS = require("teemojs");
 const api = new TeemoJS(config.key);
 const messages = require('./messages.js');
 const queues = require('./queues.js').queues;
+const Repeat = require('repeat');
+const request = require('request');
+
+let runesReforged;
+let version = "7.24.2";
+
+function init() {
+  Repeat(updateVersion).every(60, 'minutes').start.in(1, 'sec');
+  Repeat(updateRunes).every(60, 'minutes').start.in(5, 'sec'); // Increase if it's too fast for you
+}
+
+function getVersion() {
+  return version;
+}
+
+function updateVersion() {
+  request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
+    version = JSON.parse(body)[0];
+    console.log('Updated version to: ' + version);
+    return;
+  });
+}
+
+function updateRunes() {
+  request.get('http://ddragon.leagueoflegends.com/cdn/' + version + '/data/en_US/runesReforged.json', (err, response, body) => {
+    runesReforged = JSON.parse(body);
+    console.log('Updated runes.');
+  });
+}
 
 /*
  * For now, we're only getting one match.
