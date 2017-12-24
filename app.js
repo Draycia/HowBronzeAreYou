@@ -11,6 +11,7 @@ const minify = require('express-minify');
 const request = require('request');
 const util = require('./bin/util.js');
 const noBots = require('express-nobots');
+const urlencode = require('urlencode');
 
 const publicDir = path.join(__dirname, 'public');
 const date = new Date();
@@ -85,7 +86,12 @@ app.get('/', (req, res) => {
     if (req.query.region) region = req.query.region;
     else region = "NA1";
 
-    util.getMatch(req.query.summonerName, region).then(userData => {
+    util.getMatch(urlencode(req.query.summonerName), region).then(userData => {
+      if (!userData.isSet) {
+        res.render('errors', { error: "Oh no! Seems the poros were released." });
+        return;
+      }
+
       if (userData.status == 0) {
         request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
             let scores = util.getAllScores(userData, proData);
