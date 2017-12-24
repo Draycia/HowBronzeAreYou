@@ -13,10 +13,15 @@ html(lang='en')
     script.
       var pinkData = [{"label": "You", "value": #{userData.match.pinksPlaced}}, {"label": "Pro", "value": #{proData.match.pinksPlaced}}];
       var wardData = [{"label": "You", "value": #{userData.match.wardsPlaced}}, {"label": "Pro", "value": #{proData.match.wardsPlaced}}];
+      var kdaData = [{"label": "You", "value": #{userKDA}}, {"label": "Pro", "value": #{proKDA}}];
+      var csData = [{"label": "You", "value": #{userData.match.creepScore}}, {"label": "Pro", "value": #{proData.match.creepScore}}];
       var goldData = [{"label": "You", "value": #{userData.match.goldEarned}}, {"label": "Pro", "value": #{proData.match.goldEarned}}];
       $(function() {
         showHalfPiGraph(pinkData, "#pink-wards");
         showHalfPiGraph(wardData, "#green-wards");
+        showHalfPiGraph(csData, "#creep-score");
+        showHalfPiGraph(csData, "#runes");
+        if (#{proKDA} != Infinity) showHalfPiGraph(kdaData, "#kda");
         function getTextWidth(text, font) {
             var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
             var context = canvas.getContext("2d");
@@ -57,6 +62,12 @@ html(lang='en')
         br
         img#profile-icon(src='http://ddragon.leagueoflegends.com/cdn/' + version + '/img/profileicon/' + userData.summonerInfo.iconId + '.png', width='150px')
         hr
+        h1 You are...
+        img(src="./images/bronze.png")
+        h1 Bronze #{rank}!
+        hr
+        h3 Here's how you scored in each aspect: 
+        hr
         svg#pink-wards
         if (userData.match.pinksPlaced < proData.match.pinksPlaced)
           p You might have an above par winrate against Shaco if you spent a little extra gold... Your pink ward count was #{userData.match.pinksPlaced} and the average Challenger player's is #{proData.match.pinksPlaced}.
@@ -73,6 +84,34 @@ html(lang='en')
           br
         p You scored Bronze #{scores.wardsPlaced}. #{messages.wardsPlaced}
         hr
+        if (userKDA == Infinity)
+          img(src="./images/poro-laugh.png", width='150px')
+          p WHAT THE FUCK. Perfect KDA. Bronze 1. Have a happy poro.
+        else
+          svg#kda
+          if (userKDA < proKDA)
+            p Insert memey subpar KDA sentence here. Your KDA was #{userKDA} and the average Challenger player's is #{proKDA}.
+          else
+            p Insert memey above par KDA sentence here. Your KDA was #{userKDA} and the average Challenger player's is #{proKDA}.
+            br
+          p You scored Bronze #{scores.kda}. #{messages.kda}
+        hr
+        svg#creep-score
+        if (userData.match.creepScore < proData.match.creepScore)
+          p Insert memey subpar CS sentence here.  Your CS was #{userData.match.creepScore} and the average Challenger player's is #{proData.match.creepScore}.
+        else
+          p Insert memey above par CS sentence here. Your CS was #{userData.match.creepScore} and the average Challenger player's is #{proData.match.creepScore}.
+          br
+        p You scored Bronze #{scores.creepScore}. #{messages.creepScore}
+        hr
+        svg#runes
+        if (scores.runes < 5)
+          p Insert memey subpar Runes sentence here.  Your keystone was #{userKeystone} and the average Challenger player's is #{proKeystone}.
+        else
+          p Insert memey above par Runes sentence here. Your keystone was #{userKeystone} and the average Challenger player's is #{proKeystone}.
+          br
+        p You scored Bronze #{scores.runes}. #{messages.runes}
+        hr        
     footer.footer
       .container
         .text-center
