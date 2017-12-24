@@ -118,8 +118,8 @@ async function getMatch(summonerName, region) {
 }
 
 function getAllScores(userData, proData) {
-  let userKDA = (userData.match.kills + userData.match.assists) / userData.match.deaths;
-  let proKDA = (proData.match.kills + proData.match.assists) / proData.match.deaths;
+  let userKDA = getKDA(userData);
+  let proKDA = getKDA(proData);
 
   let dataObject = {}
 
@@ -151,10 +151,14 @@ function getScore(userValue, proValue) {
   return MEGAYOLO;
 }
 
+// Magic
 function getAverageScore(scores) {
-
+  let total = sum(scores);
+  let size = objSize(scores);
+  return Math.round(total / size);
 }
 
+// Lesser magic
 function getScoreByKDA(userKDA, proKDA) {
   return getScore(userKDA * 10, proKDA * 10);
 }
@@ -206,10 +210,80 @@ function getKeystoneName(userData) {
   }
 }
 
+function sum(obj) {
+  var sum = 0;
+  for (var el in obj) {
+    if (obj.hasOwnProperty(el)) {
+      sum += parseFloat(obj[el]);
+    }
+  }
+  return sum;
+}
+
+function objSize(obj) {
+  var count = 0;
+
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop))
+      ++count;
+  }
+
+  return count;
+}
+
+function getRegion(region) {
+  let rgReturn;
+  
+  switch(region) {
+    case "ru":
+      rgReturn = "ru";
+      break;
+    case "kr":
+      rgReturn = "kr";
+      break;
+    case "br":
+      rgReturn = "br1";
+      break;
+    case "oce":
+      rgReturn = "oc1";
+      break;
+    case "jp":
+      rgReturn = "jp1";
+      break;
+    case "na":
+      rgReturn = "na1";
+      break;
+    case "eune":
+      rgReturn = "eun1";
+      break;
+    case "euw":
+      rgReturn = "euw1";
+      break;
+    case "tr":
+      rgReturn = "tr1";
+      break;
+    case "las":
+      rgReturn = "la1";
+      break;
+    case "lan":
+      rgReturn = "la2";
+      break;
+    default:
+      rgReturn = "na1";
+      break;
+  }
+
+  return rgReturn;
+}
+
 module.exports = {
   getMatch: getMatch,
   getAllScores: getAllScores,
   getAverageScore: getAverageScore,
-  getMessages: getMessages
+  getMessages: getMessages,
+  getKDA: getKDA,
+  getRegion: getRegion,
   getKeystoneName: getKeystoneName,
+  getVersion: getVersion,
+  init: init
 }
