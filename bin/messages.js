@@ -29,13 +29,33 @@ const kdaMessage = [
     "", // This line intentionally left blank
     "We get it. You know how to last hit. Now try that skill on minions.",
     "",
+    "I'd suggest high mobility champions but you'd probably be vaynespotted.",
+    "Maybe revival champions are better suited for you.",
+    "I don't think that's how you should solve your problems..."
+]
+
+const csMessage = [
+    "", // This line intentionally left blank
     "",
-    "Maybe revival champions are better suited for you.", // yolo
-    "I don't think that's how you solve your problems..."
+    "",
+    "",
+    "",
+    ""
+]
+
+const runesMessage = [
+    "", // This line intentionally left blank
+    "",
+    "",
+    "",
+    "",
+    ""
 ]
 
 module.exports = {
     pinks: pinksMessage,
     wards: wardsMessage,
-    kda: kdaMessage
+    kda: kdaMessage,
+    cs: csMessage,
+    runes: runesMessage
 }
