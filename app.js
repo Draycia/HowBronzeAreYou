@@ -48,32 +48,34 @@ app.use(express.static(path.join(__dirname, 'public')));
 // });
 
 proData = {
-  summonerInfo: { name: 'aphromoo', iconId: 3156 },
+  summonerInfo: { name: 'chowdog', iconId: 7 },
   match:
     {
       perks:
         {
-          perk0Id: 8229,
-          perk1Id: 8226,
-          perk2Id: 8234,
-          perk3Id: 8237,
-          perk4Id: 8345,
-          perk5Id: 8304
+          mainPerk: 8300,
+          subPerk: 8200,
+          perk0Id: 8359,
+          perk1Id: 8313,
+          perk2Id: 8304,
+          perk3Id: 8347,
+          perk4Id: 8226,
+          perk5Id: 8234
         },
-      gameDuration: 1275,
+      gameDuration: 2082,
       queueId: 420,
       mapId: 11,
-      championId: 101,
-      spell1Id: 3,
-      spell2Id: 4,
-      kills: 3,
-      deaths: 5,
-      assists: 3,
-      totalDamageDealt: 21141,
-      goldEarned: 6069,
+      championId: 119,
+      spell1Id: 4,
+      spell2Id: 7,
+      kills: 11,
+      deaths: 9,
+      assists: 9,
+      totalDamageDealt: 202145,
+      goldEarned: 17975,
       wardsPlaced: 17,
-      pinksPlaced: 5,
-      creepScore: 100
+      pinksPlaced: 1,
+      creepScore: 220
     }
 }
 
