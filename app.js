@@ -43,13 +43,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.get('*', function(req, res, next) {
-//     if (!req.secure) {
-//         return res.redirect('https://' + req.get('host') + req.originalUrl);
-//     }
-//     return next();
-// });
-
 proData = {
   summonerInfo: { name: 'chowdog', iconId: 7 },
   match:
