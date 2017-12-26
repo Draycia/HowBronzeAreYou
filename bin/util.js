@@ -192,7 +192,26 @@ function getMessages(scores) {
   return messageObject;
 }
 
-// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+// Deprecated
+// function getKeystoneName(userData) {
+//   let keystoneType = userData.match.perks.mainPerk;
+//   let keystoneId = userData.match.perks.perk0Id;
+//   for (let i = 0; i < Object.keys(runesReforged).length; i++) {
+//     let type = runesReforged[i];
+//     if (type.id == keystoneType) {
+//       for (let j = 0; j < Object.keys(type.slots).length; j++) {
+//         let runes = type.slots[j].runes;
+//         for (let k = 0; k < Object.keys(runes).length; k++) {
+//           let rune = runes[k];
+//           if (rune.id == keystoneId) {
+//             return rune.name;
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+
 function getKeystoneName(userData) {
   let keystoneType = userData.match.perks.mainPerk;
   let keystoneId = userData.match.perks.perk0Id;
@@ -208,6 +227,8 @@ function getKeystoneName(userData) {
           }
         }
       }
+    if (runesReforged[i].id == keystoneId) {
+      return runesReforged[i].name;
     }
   }
 }
