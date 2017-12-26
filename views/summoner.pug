@@ -46,16 +46,16 @@ html(lang='en')
             a(href='https://github.com/Draycia/HowBronzeAreYou') Github
         ul.nav.navbar-nav.navbar-right
           a(href='#')
-            form.navbar-form.navbar-left(action='/', method='GET')
+            form#inputForm.navbar-form.navbar-left(action='/', method='GET')
               .input-group
-                input.search-query.form-control(type='text', placeholder='Search', name='summonerName')
+                input#inputSummoner.search-query.form-control(type='text', placeholder='Search', name='summonerName')
                 |     
                 .input-group-btn
                   button.btn.btn-default(type='submit')
                     i.glyphicon.glyphicon-search
               select#inputRegion.form-control.fix-region-button(name='region')
-                option(selected='', value='NA1') NA
-                option(value='EUW1') EUW
+                option(selected='', value='na') NA
+                option(value='euw') EUW
     .container
       .text-center
         h1#summonerName= userData.summonerInfo.name
