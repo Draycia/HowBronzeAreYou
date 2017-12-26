@@ -11,7 +11,7 @@ let version = "7.24.2";
 
 function init() {
   Repeat(updateVersion).every(60, 'minutes').start.in(1, 'sec');
-  Repeat(updateRunes).every(60, 'minutes').start.in(5, 'sec'); // Increase if it's too fast for you
+  Repeat(updateRunes).every(60, 'minutes').start.in(1, 'sec');
 }
 
 function getVersion() {
@@ -27,10 +27,12 @@ function updateVersion() {
 }
 
 function updateRunes() {
-  request.get('http://ddragon.leagueoflegends.com/cdn/' + version + '/data/en_US/runesReforged.json', (err, response, body) => {
-    runesReforged = JSON.parse(body);
-    console.log('Updated runes.');
-  });
+  // request.get('http://ddragon.leagueoflegends.com/cdn/' + version + '/data/en_US/runesReforged.json', (err, response, body) => {
+  //   runesReforged = JSON.parse(body);
+  //   console.log('Updated runes.');
+  // });
+  runesReforged = JSON.parse(fs.readFileSync('./bin/perks.json'));
+  console.log('Loaded runes json');
 }
 
 /*
