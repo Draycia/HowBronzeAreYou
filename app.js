@@ -83,7 +83,7 @@ app.get('/', (req, res) => {
       request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
         res.render('summoner', { version: JSON.parse(body)[0], userData: userData, proData: proData });
       });
-    });
+    }).catch(err => console.error(err));
   } else {
     res.render('index');
   }

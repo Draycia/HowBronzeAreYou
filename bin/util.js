@@ -3,13 +3,9 @@ const TeemoJS = require("teemojs")
 const api = new TeemoJS(config.key)
 const cGG = new TeemoJS(config.cGGKey, TeemoJS.championGGConfig)
 const fs = require("fs")
+const _ = require("underscore")
 // Default region
-let region = "NA1"
 
-/*
- * For now, we're only getting one match.
- * This will be converted to getMatchlist in the future.
- */
 
 function decimalRound(number, precision){
   let factor = Math.pow(10, precision);
@@ -76,7 +72,7 @@ async function getMatch(summonerName) {
 
 function createChampFile() {
   cGG.get("champion.getAllChampions", {"champData": ["kda", "damage", "minions", "wards", "goldEarned"]}).then(data => {
-    let dumpObjects = []
+    let dumpObjects = {data:[]}
     let matchArray = []
 
     for(let temp in data) {
@@ -86,27 +82,33 @@ function createChampFile() {
       if(!matchArray.includes(champId)) {
         matchArray += champId
 
-        dumpObjects[`${champId}`] = {}
+        dumpObjects.data[`${champId}`] = {}
 
-        dumpObjects[`${champId}`].champId = champId
-        dumpObjects[`${champId}`].winRate = decimalRound(ezData.winRate, 2)
-        dumpObjects[`${champId}`].kills = decimalRound(ezData.kills, 1)
-        dumpObjects[`${champId}`].deaths = decimalRound(ezData.deaths, 1)
-        dumpObjects[`${champId}`].assists = decimalRound(ezData.assists, 1)
-        dumpObjects[`${champId}`].creepScore = decimalRound(ezData.minionsKilled, 1)
-        dumpObjects[`${champId}`].wardsPlaced = decimalRound(ezData.wardPlaced, 1)
-        dumpObjects[`${champId}`].goldEarned = Math.round(ezData.goldEarned)
+        dumpObjects.data[`${champId}`].champId = champId
+        dumpObjects.data[`${champId}`].winRate = decimalRound(ezData.winRate, 2)
+        dumpObjects.data[`${champId}`].kills = decimalRound(ezData.kills, 1)
+        dumpObjects.data[`${champId}`].deaths = decimalRound(ezData.deaths, 1)
+        dumpObjects.data[`${champId}`].assists = decimalRound(ezData.assists, 1)
+        dumpObjects.data[`${champId}`].creepScore = decimalRound(ezData.minionsKilled, 1)
+        dumpObjects.data[`${champId}`].wardsPlaced = decimalRound(ezData.wardPlaced, 1)
+        dumpObjects.data[`${champId}`].goldEarned = Math.round(ezData.goldEarned)
+
       } else if(matchArray.includes(champId)) {
-        console.log("there was a repeat")
+        console.log("There was a repeat while writing to the champStats.json file. Don't worry, this isn't an error. I just needed something to put in an else if statement. Hi mom!")
       } else {
         console.log("lol that screwed")
-
       }
     }
-    console.log(dumpObjects)
-  })
+    fs.writeFile("./bin/champStats.json", JSON.stringify(dumpObjects), (err) => {
+      if(err) {
+        console.error(err)
+      } else {
+        console.log("Champion stats have been successfully saved.")
+      }
+    })
+  }).catch(err => console.log("There was an error: \n" + err))
 }
-
+createChampFile()
 
 module.exports = {
   getMatch: getMatch,
