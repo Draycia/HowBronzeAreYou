@@ -38,7 +38,7 @@ html(lang='en')
     nav.navbar.navbar-default
       .container-fluid
         .navbar-header
-          a.navbar-brand(href='#') How Bronze Are You?
+          a.navbar-brand(href='/') How Bronze Are You?
         ul.nav.navbar-nav
           li
             a(href='/') Home
@@ -74,7 +74,6 @@ html(lang='en')
           p You might have an above par winrate against Shaco if you spent a little extra gold... Your pink ward count was #{userData.match.pinksPlaced} and the average Challenger player's is #{proData.match.pinksPlaced}.
         else
           p Are you even placing those correctly? Your pink ward count was #{userData.match.pinksPlaced} and the average Challenger player's is #{proData.match.pinksPlaced}.
-          br
         p You scored Bronze #{scores.pinksPlaced}. #{messages.pinksPlaced}
         hr
         svg#green-wards
@@ -82,7 +81,6 @@ html(lang='en')
           p No wonder you struggle against Rengar... Your ward count was #{userData.match.wardsPlaced} and the average Challenger player's is #{proData.match.wardsPlaced}.
         else
           p Sitting in the fountain spamming sightstone isn't something to be proud of. Your ward count was #{userData.match.wardsPlaced} and the average Challenger player's is #{proData.match.wardsPlaced}.
-          br
         p You scored Bronze #{scores.wardsPlaced}. #{messages.wardsPlaced}
         hr
         if (userKDA == Infinity)
@@ -94,15 +92,13 @@ html(lang='en')
             p Insert memey subpar KDA sentence here. Your KDA was #{userKDA} and the average Challenger player's is #{proKDA}.
           else
             p Insert memey above par KDA sentence here. Your KDA was #{userKDA} and the average Challenger player's is #{proKDA}.
-            br
           p You scored Bronze #{scores.kda}. #{messages.kda}
         hr
         svg#creep-score
         if (userData.match.creepScore < proData.match.creepScore)
-          p Insert memey subpar CS sentence here.  Your CS was #{userData.match.creepScore} and the average Challenger player's is #{proData.match.creepScore}.
+          p Insert memey subpar CS sentence here. Your CS was #{userData.match.creepScore} and the average Challenger player's is #{proData.match.creepScore}.
         else
           p Insert memey above par CS sentence here. Your CS was #{userData.match.creepScore} and the average Challenger player's is #{proData.match.creepScore}.
-          br
         p You scored Bronze #{scores.creepScore}. #{messages.creepScore}
         hr
         svg#runes
@@ -122,6 +118,9 @@ html(lang='en')
         if (scores.goldEarned < 5)
           p Insert memey subpar gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and the average Challenger player's is #{proData.match.goldEarned}.
         else
+          p Insert memey above par gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and the average Challenger player's is #{proData.match.goldEarned}.
+        p You scored Bronze #{scores.goldEarned}. #{messages.goldEarned}
+        hr   
     footer.footer
       .container
         .text-center
