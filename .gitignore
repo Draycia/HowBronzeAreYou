@@ -1,3 +1,4 @@
 node_modules/
 bin/configuration.js
 public/images/runes/
+public/stylesheets/style.css
