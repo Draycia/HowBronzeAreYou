@@ -77,9 +77,9 @@ proData = {
 
 app.get('/', (req, res) => {
   if (req.query.summonerName) {
-    let region = '';
+    let region = 'na1';
     if (req.subdomains[0]) region = util.getRegion(req.subdomains[0]);
-    else region = "NA1";
+    if (req.query.region) region = util.getRegion(req.query.region);
 
     util.getMatch(urlencode(req.query.summonerName), region).then(userData => {
       if (!userData.isSet) {
