@@ -15,12 +15,13 @@ html(lang='en')
       var wardData = [{"label": "You", "value": #{userData.match.wardsPlaced}}, {"label": "Pro", "value": #{proData.match.wardsPlaced}}];
       var kdaData = [{"label": "You", "value": #{userKDA}}, {"label": "Pro", "value": #{proKDA}}];
       var csData = [{"label": "You", "value": #{userData.match.creepScore}}, {"label": "Pro", "value": #{proData.match.creepScore}}];
+      var runeData = [{"label": "You", "value": #{scores.runeMatches}}, {"label": "Pro", "value": #{6 - scores.runeMatches}}];
       var goldData = [{"label": "You", "value": #{userData.match.goldEarned}}, {"label": "Pro", "value": #{proData.match.goldEarned}}];
       $(function() {
         showHalfPiGraph(pinkData, "#pink-wards");
         showHalfPiGraph(wardData, "#green-wards");
         showHalfPiGraph(csData, "#creep-score");
-        showHalfPiGraph(csData, "#runes");
+        showHalfPiGraph(runeData, "#runes");
         if (#{proKDA} != Infinity) showHalfPiGraph(kdaData, "#kda");
         function getTextWidth(text, font) {
             var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
@@ -105,13 +106,22 @@ html(lang='en')
         p You scored Bronze #{scores.creepScore}. #{messages.creepScore}
         hr
         svg#runes
-        if (scores.runes < 5)
-          p Insert memey subpar Runes sentence here.  Your keystone was #{userKeystone} and the average Challenger player's is #{proKeystone}.
+          div
+            if (scores.runes < 5)
+              p.display-flex Insert memey subpar Runes sentence here.
+            else
+              p.display-flex Insert memey above par Runes sentence here.
+            p.display-flex Your keystone was
+            img.keystone.display-flex(src="./images/runes/" + userData.match.perks.perk0Id + ".png")
+            p.display-flex #{userKeystone} and the average Challenger player's is 
+            img.keystone.display-flex(src="./images/runes/" + proData.match.perks.perk0Id + ".png")
+            p.display-flex #{proKeystone}. You shared #{scores.runeMatches} runes.
+            p You scored Bronze #{scores.runes}. #{messages.runes}
+        hr
+        svg#gold-earned
+        if (scores.goldEarned < 5)
+          p Insert memey subpar gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and the average Challenger player's is #{proData.match.goldEarned}.
         else
-          p Insert memey above par Runes sentence here. Your keystone was #{userKeystone} and the average Challenger player's is #{proKeystone}.
-          br
-        p You scored Bronze #{scores.runes}. #{messages.runes}
-        hr        
     footer.footer
       .container
         .text-center

@@ -129,7 +129,8 @@ function getAllScores(userData, proData) {
   dataObject.wardsPlaced = getScore(userData.match.wardsPlaced, proData.match.wardsPlaced);
   dataObject.creepScore = getScore(userData.match.creepScore, proData.match.creepScore);
   dataObject.kda = getScoreByKDA(userKDA, proKDA);
-  dataObject.runes = getScoreByRunes(userData, proData);
+  [dataObject.runes, dataObject.runeMatches] = getScoreByRunes(userData, proData); // POGCHAMP
+  dataObject.goldEarned = getScore(userData.match.goldEarned, proData.match.goldEarned);
 
   return dataObject;
 }
@@ -169,11 +170,12 @@ function getScoreByKDA(userKDA, proKDA) {
 function getScoreByRunes(userData, proData) {
   let matches = 0;
   for (let i = 0; i < 6; i++) {
-    if (userData.match.perks["perk" + i + "Id"] === proData.match.perks["perk" + i + "Id"]) {
+    console.log(userData.match.perks["perk" + i + "Id"] + " " + proData.match.perks["perk" + i + "Id"]);
+    if (userData.match.perks["perk" + i + "Id"] == proData.match.perks["perk" + i + "Id"]) {
       matches++;
     }
   }
-  return getScore(matches, 6);
+  return [getScore(matches, 6), matches];
 }
 
 
