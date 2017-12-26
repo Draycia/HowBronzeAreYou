@@ -244,6 +244,7 @@ function objSize(obj) {
 }
 
 function getRegion(region) {
+  region = region.toLowerCase();
   let rgReturn;
   
   switch(region) {
