@@ -26,12 +26,13 @@
 				"request": "^2.83.0",
 				"serve-favicon": "~2.3.2",
 				"stylus": "^0.54.5",
-				"teemojs": "^1.1.0-alpha3",
+				"teemojs": "^1.1.0"
 				"urlencode": "^1.1.0",
 				"wildcard-subdomains": "^1.1.0"
 		},
 		"devDependencies": {
-				"@types/node": "^8.5.1",
-				"typescript": "^2.6.2"
+				"@types/node": "^8.5.2",
+				"typescript": "^2.6.2",
+				"underscore": "^1.8.3"
 		}
 }

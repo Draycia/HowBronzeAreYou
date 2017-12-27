@@ -1,10 +1,21 @@
-const config = require("./configuration.js");
 const TeemoJS = require("teemojs");
 const api = new TeemoJS(config.key);
+const cGG = new TeemoJS(config.cGGKey, TeemoJS.championGGConfig);
+const fs = require("fs");
+const config = require("./configuration.js");
+
+
 const messages = require('./messages.js');
 const queues = require('./queues.js').queues;
 const Repeat = require('repeat');
 const request = require('request');
+
+function decimalRound(number, precision){
+  let factor = Math.pow(10, precision);
+  let tempNumber = number * factor;
+  let roundedTempNumber = Math.round(tempNumber);
+  return roundedTempNumber / factor;
+}
 
 let runesReforged;
 let version = "7.24.2";
@@ -64,6 +75,11 @@ async function getMatch(summonerName, region) {
 
   let queue5v5;
   for(let i = 0; i < 20; i++) {
+    if(matchlist.matches[i].queue >= 400 && matchlist.matches[i].queue <= 440) {
+      queue5v5 = i;
+      break;
+    }
+    if (matchlist.matches[19].queue !== queue5v5) return;
     if(queues.includes(matchlist.matches[i].queue) && matchlist.matches[i].platformId == region.toUpperCase()) {
       queue5v5 = i;
       break;
@@ -116,6 +132,45 @@ async function getMatch(summonerName, region) {
       return dataObject;
     }
   }
+}
+
+function createChampFile() {
+  cGG.get("champion.getAllChampions", {"champData": ["kda", "damage", "minions", "wards", "goldEarned"]}).then(data => {
+    let dumpObjects = {data:[]}
+    let matchArray = []
+
+    for(let temp in data) {
+      let champId = data[temp]._id.championId
+      let ezData = data[temp]
+      if(!data.hasOwnProperty(temp)) continue
+      if(!matchArray.includes(champId)) {
+        matchArray += champId
+
+        dumpObjects.data[`${champId}`] = {}
+
+        dumpObjects.data[`${champId}`].champId = champId
+        dumpObjects.data[`${champId}`].winRate = decimalRound(ezData.winRate, 2)
+        dumpObjects.data[`${champId}`].kills = decimalRound(ezData.kills, 1)
+        dumpObjects.data[`${champId}`].deaths = decimalRound(ezData.deaths, 1)
+        dumpObjects.data[`${champId}`].assists = decimalRound(ezData.assists, 1)
+        dumpObjects.data[`${champId}`].creepScore = decimalRound(ezData.minionsKilled, 1)
+        dumpObjects.data[`${champId}`].wardsPlaced = decimalRound(ezData.wardPlaced, 1)
+        dumpObjects.data[`${champId}`].goldEarned = Math.round(ezData.goldEarned)
+
+      } else if(matchArray.includes(champId)) {
+        console.log("There was a repeat while writing to the champStats.json file. Don't worry, this isn't an error. I just needed something to put in an else if statement. Hi mom!")
+      } else {
+        console.log("lol that screwed")
+      }
+    }
+    fs.writeFile("./bin/champStats.json", JSON.stringify(dumpObjects), (err) => {
+      if(err) {
+        console.error(err)
+      } else {
+        console.log("Champion stats have been successfully saved.")
+      }
+    })
+  }).catch(err => console.log("There was an error: \n" + err))
   return dataObject;
 }
 
@@ -293,6 +348,7 @@ function getRegion(region) {
 
 module.exports = {
   getMatch: getMatch,
+  createChampFile: createChampFile,
   getAllScores: getAllScores,
   getAverageScore: getAverageScore,
   getMessages: getMessages,
