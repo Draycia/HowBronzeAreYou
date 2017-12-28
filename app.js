@@ -86,16 +86,7 @@ app.get('/', (req, res) => {
         res.render('errors', { error: "Oh no! Seems the poros were released." });
         return;
       }
-
-    /* Wasn't sure if this was needed or not hehe xd
-    
-    api.getMatch(req.query.summonerName, region).then(userData => {
-      request.get('http://ddragon.leagueoflegends.com/api/versions.json', (err, response, body) => {
-        res.render('summoner', { version: JSON.parse(body)[0], userData: userData, proData: proData });
-      });
-    }).catch(err => console.error(err));*/
       if (userData.status == 0) {
-        //console.log(userData);
         let scores = util.getAllScores(userData, proData);
         let messages = util.getMessages(scores);
         let userKDA = util.getKDA(userData);

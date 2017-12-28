@@ -1,9 +1,8 @@
+const config = require("./configuration.js");
 const TeemoJS = require("teemojs");
 const api = new TeemoJS(config.key);
 const cGG = new TeemoJS(config.cGGKey, TeemoJS.championGGConfig);
 const fs = require("fs");
-const config = require("./configuration.js");
-
 
 const messages = require('./messages.js');
 const queues = require('./queues.js').queues;
@@ -38,10 +37,6 @@ function updateVersion() {
 }
 
 function updateRunes() {
-  // request.get('http://ddragon.leagueoflegends.com/cdn/' + version + '/data/en_US/runesReforged.json', (err, response, body) => {
-  //   runesReforged = JSON.parse(body);
-  //   console.log('Updated runes.');
-  // });
   runesReforged = JSON.parse(fs.readFileSync('./bin/perks.json'));
   console.log('Loaded runes json');
 }
@@ -64,6 +59,7 @@ async function getMatch(summonerName, region) {
     "status": 0,
     "isSet": false
   }
+
   let summonerInfo = await api.get(region, "summoner.getBySummonerName", summonerName);
 
   if (!summonerInfo) {
@@ -74,12 +70,8 @@ async function getMatch(summonerName, region) {
   let matchlist = await api.get(region, "match.getMatchlist", summonerInfo.accountId, { beginIndex: 0, endIndex: 20 });
 
   let queue5v5;
+
   for(let i = 0; i < 20; i++) {
-    if(matchlist.matches[i].queue >= 400 && matchlist.matches[i].queue <= 440) {
-      queue5v5 = i;
-      break;
-    }
-    if (matchlist.matches[19].queue !== queue5v5) return;
     if(queues.includes(matchlist.matches[i].queue) && matchlist.matches[i].platformId == region.toUpperCase()) {
       queue5v5 = i;
       break;
@@ -230,7 +222,7 @@ function getScoreByRunes(userData, proData) {
       matches++;
     }
   }
-  return [getScore(matches, 6), matches];
+  return [getScore(matches + 1.5, 6), matches];
 }
 
 
