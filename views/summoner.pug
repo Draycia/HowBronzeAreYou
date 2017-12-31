@@ -18,6 +18,9 @@ html(lang='en')
       var runeData = [{"label": "You", "value": #{scores.runeMatches}}, {"label": "Pro", "value": #{6 - scores.runeMatches}}];
       var goldData = [{"label": "You", "value": #{userData.match.goldEarned}}, {"label": "Pro", "value": #{proData.match.goldEarned}}];
       $(function() {
+        if (#{userData.match.pinksPlaced} == 0 && #{proData.match.pinksPlaced} == 0) {
+          $('#pinks').hide();
+        }
         showHalfPiGraph(pinkData, "#pink-wards");
         showHalfPiGraph(wardData, "#green-wards");
         showHalfPiGraph(csData, "#creep-score");
@@ -34,6 +37,9 @@ html(lang='en')
         var width = getTextWidth("#{userData.summonerInfo.name}", "bold 53px Chronic Sans");
         if (width < 225) width = 225;
         $("#bronze-thingy").css({ 'width': width + 35 + "px" });
+        $('.#{region}').each(function() {
+          $(this).attr("selected", "true");
+        });
       });
   body.comic-sans
     nav.navbar.navbar-default
@@ -55,8 +61,8 @@ html(lang='en')
                   button.btn.btn-default(type='submit')
                     i.glyphicon.glyphicon-search
               select#inputRegion.form-control.fix-region-button(name='region')
-                option(selected='', value='na') NA
-                option(value='euw') EUW
+                option.na(selected='', value='na') NA
+                option.euw(value='euw') EUW
     .container
       .text-center
         h1#summonerName= userData.summonerInfo.name
@@ -70,18 +76,19 @@ html(lang='en')
         hr
         h3 Here's how you scored in each aspect: 
         hr
-        svg#pink-wards
-        if (userData.match.pinksPlaced < proData.match.pinksPlaced)
-          p You might have an above par winrate against Shaco if you spent a little extra gold... Your pink ward count was #{userData.match.pinksPlaced} and the average Challenger player's is #{proData.match.pinksPlaced}.
-        else
-          p Are you even placing those correctly? Your pink ward count was #{userData.match.pinksPlaced} and the average Challenger player's is #{proData.match.pinksPlaced}.
-        p You scored Bronze #{scores.pinksPlaced}. #{messages.pinksPlaced}
-        hr
+        #pinks
+          svg#pink-wards
+          if (userData.match.pinksPlaced < proData.match.pinksPlaced)
+            p You might have an above par winrate against Shaco if you spent a little extra gold... Your pink ward count was #{userData.match.pinksPlaced} and #{proData.summonerInfo.name}'s is #{proData.match.pinksPlaced}.
+          else
+            p Are you even placing those correctly? Your pink ward count was #{userData.match.pinksPlaced} and #{proData.summonerInfo.name}'s is #{proData.match.pinksPlaced}.
+          p You scored Bronze #{scores.pinksPlaced}. #{messages.pinksPlaced}
+          hr
         svg#green-wards
         if (userData.match.wardsPlaced < proData.match.wardsPlaced)
-          p No wonder you struggle against Rengar... Your ward count was #{userData.match.wardsPlaced} and the average Challenger player's is #{proData.match.wardsPlaced}.
+          p No wonder you struggle against Rengar... Your ward count was #{userData.match.wardsPlaced} and #{proData.summonerInfo.name}'s is #{proData.match.wardsPlaced}.
         else
-          p Sitting in the fountain spamming sightstone isn't something to be proud of. Your ward count was #{userData.match.wardsPlaced} and the average Challenger player's is #{proData.match.wardsPlaced}.
+          p Sitting in the fountain spamming sightstone isn't something to be proud of. Your ward count was #{userData.match.wardsPlaced} and #{proData.summonerInfo.name}'s is #{proData.match.wardsPlaced}.
         p You scored Bronze #{scores.wardsPlaced}. #{messages.wardsPlaced}
         hr
         if (userKDA == Infinity)
@@ -90,16 +97,16 @@ html(lang='en')
         else
           svg#kda
           if (userKDA < proKDA)
-            p Insert memey subpar KDA sentence here. Your KDA was #{userKDA} and the average Challenger player's is #{proKDA}.
+            p Insert memey subpar KDA sentence here. Your KDA was #{userKDA} and #{proData.summonerInfo.name}'s is #{proKDA}.
           else
-            p Insert memey above par KDA sentence here. Your KDA was #{userKDA} and the average Challenger player's is #{proKDA}.
+            p Insert memey above par KDA sentence here. Your KDA was #{userKDA} and #{proData.summonerInfo.name}'s is #{proKDA}.
           p You scored Bronze #{scores.kda}. #{messages.kda}
         hr
         svg#creep-score
         if (userData.match.creepScore < proData.match.creepScore)
-          p Insert memey subpar CS sentence here. Your CS was #{userData.match.creepScore} and the average Challenger player's is #{proData.match.creepScore}.
+          p Insert memey subpar CS sentence here. Your CS was #{userData.match.creepScore} and #{proData.summonerInfo.name}'s is #{proData.match.creepScore}.
         else
-          p Insert memey above par CS sentence here. Your CS was #{userData.match.creepScore} and the average Challenger player's is #{proData.match.creepScore}.
+          p Insert memey above par CS sentence here. Your CS was #{userData.match.creepScore} and #{proData.summonerInfo.name}'s is #{proData.match.creepScore}.
         p You scored Bronze #{scores.creepScore}. #{messages.creepScore}
         hr
         svg#runes
@@ -110,16 +117,16 @@ html(lang='en')
               p.display-flex Insert memey above par Runes sentence here.
             p.display-flex Your keystone was
             img.keystone.display-flex(src="./images/runes/" + userData.match.perks.perk0Id + ".png")
-            p.display-flex #{userKeystone} and the average Challenger player's is 
+            p.display-flex #{userKeystone} and #{proData.summonerInfo.name}'s is 
             img.keystone.display-flex(src="./images/runes/" + proData.match.perks.perk0Id + ".png")
             p.display-flex #{proKeystone}. You shared #{scores.runeMatches} runes.
             p You scored Bronze #{scores.runes}. #{messages.runes}
         hr
         svg#gold-earned
         if (scores.goldEarned < 5)
-          p Insert memey subpar gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and the average Challenger player's is #{proData.match.goldEarned}.
+          p Insert memey subpar gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and #{proData.summonerInfo.name}'s is #{proData.match.goldEarned}.
         else
-          p Insert memey above par gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and the average Challenger player's is #{proData.match.goldEarned}.
+          p Insert memey above par gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and #{proData.summonerInfo.name}'s is #{proData.match.goldEarned}.
         p You scored Bronze #{scores.goldEarned}. #{messages.goldEarned}
         hr   
     footer.footer

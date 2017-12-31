@@ -42,11 +42,23 @@ function showHalfPiGraph(data, selector) {
 }
 
 $(function() {
+    // Summoner VS average high elo player
     $('#inputForm').on('submit', function(e) {
-        console.log('test');
         e.preventDefault();
         let region = $('#inputRegion').val();
         let summoner = $('#inputSummoner').val();
+        if (!summoner) return;
         window.location.href = `http://${region}.howbronzeareyou.com/?summonerName=${summoner}`;
+    });
+
+    // Summoner VS Summoner
+    $('#comparisonForm').on('submit', function(e) {
+        e.preventDefault();
+        let userRegion = $('#comparisonRegionOne').val();
+        let comparisonRegion = $('#comparisonRegionTwo').val();
+        let userSummoner = $('#comparisonSummonerOne').val();
+        let comparisonSummoner = $('#comparisonSummonerTwo').val();
+        if (!comparisonSummoner || !userSummoner) return;
+        window.location.href = `http://${userRegion}.howbronzeareyou.com/?summonerName=${userSummoner}&otherSummoner=${comparisonSummoner}&otherRegion=${comparisonRegion}`;
     });
 });

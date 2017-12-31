@@ -4,6 +4,8 @@ const api = new TeemoJS(config.key);
 const cGG = new TeemoJS(config.cGGKey, TeemoJS.championGGConfig);
 const fs = require("fs");
 
+const app = require('../app.js');
+
 const messages = require('./messages.js');
 const queues = require('./queues.js').queues;
 const Repeat = require('repeat');
@@ -22,6 +24,7 @@ let version = "7.24.2";
 function init() {
   Repeat(updateVersion).every(60, 'minutes').start.in(1, 'sec');
   Repeat(updateRunes).every(60, 'minutes').start.in(1, 'sec');
+  Repeat(createChampFile).every(60, 'minutes').start.in(1, 'sec');
 }
 
 function getVersion() {
@@ -59,6 +62,8 @@ async function getMatch(summonerName, region) {
     "status": 0,
     "isSet": false
   }
+
+  console.log("summoner name: " + summonerName + ", region: " + region);
 
   let summonerInfo = await api.get(region, "summoner.getBySummonerName", summonerName);
 
@@ -127,43 +132,44 @@ async function getMatch(summonerName, region) {
 }
 
 function createChampFile() {
-  cGG.get("champion.getAllChampions", {"champData": ["kda", "damage", "minions", "wards", "goldEarned"]}).then(data => {
-    let dumpObjects = {data:[]}
-    let matchArray = []
+  cGG.get("champion.getAllChampions", {"champData": ["kda", "damage", "minions", "wards", "goldEarned", "hashes"]}).then(data => {
+    let dumpObjects = {data: []};
+    let matchArray = [];
+    // hi rito owo
+    for (let temp in data) {
+      let champId = data[temp]._id.championId;
+      let ezData = data[temp];
+      if (!data.hasOwnProperty(temp)) continue;
+      if (!matchArray.includes(champId)) {
+        matchArray += champId;
 
-    for(let temp in data) {
-      let champId = data[temp]._id.championId
-      let ezData = data[temp]
-      if(!data.hasOwnProperty(temp)) continue
-      if(!matchArray.includes(champId)) {
-        matchArray += champId
-
-        dumpObjects.data[`${champId}`] = {}
+        dumpObjects.data[`${champId}`] = {"runes": []};
+        dumpObjects.data[`${champId}`];
 
         dumpObjects.data[`${champId}`].champId = champId
-        dumpObjects.data[`${champId}`].winRate = decimalRound(ezData.winRate, 2)
-        dumpObjects.data[`${champId}`].kills = decimalRound(ezData.kills, 1)
-        dumpObjects.data[`${champId}`].deaths = decimalRound(ezData.deaths, 1)
-        dumpObjects.data[`${champId}`].assists = decimalRound(ezData.assists, 1)
-        dumpObjects.data[`${champId}`].creepScore = decimalRound(ezData.minionsKilled, 1)
-        dumpObjects.data[`${champId}`].wardsPlaced = decimalRound(ezData.wardPlaced, 1)
-        dumpObjects.data[`${champId}`].goldEarned = Math.round(ezData.goldEarned)
+        dumpObjects.data[`${champId}`].winRate = decimalRound(ezData.winRate, 2);
+        dumpObjects.data[`${champId}`].kills = decimalRound(ezData.kills, 1);
+        dumpObjects.data[`${champId}`].deaths = decimalRound(ezData.deaths, 1);
+        dumpObjects.data[`${champId}`].assists = decimalRound(ezData.assists, 1);
+        dumpObjects.data[`${champId}`].creepScore = decimalRound(ezData.minionsKilled, 1);
+        dumpObjects.data[`${champId}`].wardsPlaced = decimalRound(ezData.wardPlaced, 1);
+        dumpObjects.data[`${champId}`].goldEarned = Math.round(ezData.goldEarned);
 
-      } else if(matchArray.includes(champId)) {
-        console.log("There was a repeat while writing to the champStats.json file. Don't worry, this isn't an error. I just needed something to put in an else if statement. Hi mom!")
+        let hash = ezData.hashes.runehash.highestCount;
+        let runeIds = hash.hash.replace(/-/g, " ").split(" ");
+
+        for (let i = 0; i < runes.length; i++) {
+          dumpObjects.data[`${champId}`].runes[i] = runeIds[i];
+        }
+      } else if (matchArray.includes(champId)) {
+        console.log("There was a repeat while writing to the champStats.json file. Don't worry, this isn't an error. I just needed something to put in an else if statement. Hi mom!");
       } else {
-        console.log("lol that screwed")
+        console.log("lol that screwed");
       }
     }
-    fs.writeFile("./bin/champStats.json", JSON.stringify(dumpObjects), (err) => {
-      if(err) {
-        console.error(err)
-      } else {
-        console.log("Champion stats have been successfully saved.")
-      }
-    })
-  }).catch(err => console.log("There was an error: \n" + err))
-  return dataObject;
+    app.champData = dumpObjects;
+
+  }).then(console.log("Champ stats have been updated. Time: " + Date.now())).catch(err => console.log("There was an error: \n" + err));
 }
 
 function getAllScores(userData, proData) {
@@ -217,7 +223,6 @@ function getScoreByKDA(userKDA, proKDA) {
 function getScoreByRunes(userData, proData) {
   let matches = 0;
   for (let i = 0; i < 6; i++) {
-    console.log(userData.match.perks["perk" + i + "Id"] + " " + proData.match.perks["perk" + i + "Id"]);
     if (userData.match.perks["perk" + i + "Id"] == proData.match.perks["perk" + i + "Id"]) {
       matches++;
     }

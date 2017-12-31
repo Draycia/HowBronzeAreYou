@@ -9,6 +9,12 @@ html(lang='en')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
     script(src='./javascripts/main.js')
+    script.
+      $(function() {
+        $('.#{region}').each(function() {
+          $(this).attr("selected", "true");
+        });
+      });
   body.comic-sans
     nav.navbar.navbar-default
       .container-fluid
@@ -19,19 +25,52 @@ html(lang='en')
             a(href='/') Home
           li
             a(href='https://github.com/Draycia/HowBronzeAreYou') Github
-        ul.nav.navbar-nav.navbar-right
-          a(href='#')
-            form#inputForm.navbar-form.navbar-left(action='/', method='GET')
-              .input-group
-                input#inputSummoner.search-query.form-control(type='text', placeholder='Search', name='summonerName')
-                |     
-                .input-group-btn
-                  button.btn.btn-default(type='submit')
-                    i.glyphicon.glyphicon-search
-              select#inputRegion.form-control.fix-region-button(name='region')
-                option(selected='', value='na') NA
-                option(value='euw') EUW
-    .container
+    //.container.line
+    .container-fluid
       .text-center
+        img(src="./images/bronze.png")
         p Have you ever wondered how bronze you are? How bronze your friends are? Want to see who's more bronze? You might've come to the right place.<br>Remember: everybody is bronze, but not everyone is equally bronze.
+      .blank-space
+      .row
+        .col-lg-6.border-seperator
+          ul.nav.navbar-nav.navbar-right
+            .text-center
+              p Want to compare your stats VS your friends?<br>Use me!
+            a(href='#')
+              form#comparisonForm.navbar-form(action='/', method='GET')
+                .input-group
+                  input#comparisonSummonerOne.search-query.form-control(type='text', placeholder='Your   summoner  name!', name='summonerName')
+                  |     
+                  .input-group-btn
+                    button.btn.btn-default(type='submit')
+                      i.glyphicon.glyphicon-search
+                select#comparisonRegionOne.form-control(name='region')
+                  option.na(value='na') NA
+                  option.euw(value='euw') EUW
+                br
+                .input-group
+                  input#comparisonSummonerTwo.search-query.form-control(type='text', placeholder='Their summoner name!', name='otherSummoner')
+                  |     
+                  .input-group-btn
+                    button.btn.btn-default(type='submit')
+                      i.glyphicon.glyphicon-search
+                select#comparisonRegionTwo.form-control(name='region')
+                  option.na(value='na') NA
+                  option.euw(value='euw') EUW
+        .col-lg-6
+          ul.nav.navbar-nav.fix-left-form
+            .text-center.fix-left-text
+              p.extra-space Want to compare your stats VS the average high elo<br>player? Use me!
+            a(href='#')
+              fieldset(disabled='disabled')
+                form#inputForm.navbar-form(action='/', method='GET')
+                  .input-group
+                    input#inputSummoner.search-query.form-control(type='text', placeholder='Search', name='summonerName')
+                    |     
+                    .input-group-btn
+                      button.btn.btn-default(type='submit')
+                        i.glyphicon.glyphicon-search
+                  select#inputRegion.form-control(name='region')
+                    option.na(value='na') NA
+                    option.euw(value='euw') EUW
     footer.text-center.footer-absolute How Bronze Are You? isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.

@@ -78,10 +78,19 @@ footer
     position absolute
 
 .fix-region-button
-    transform translateY(1px) // Why is this necessary? Why is the div shifted up one pixel without this? Chrome pls.
+    transform translateY(-1px) // Why is this necessary? Why is the div shifted up one pixel without this? Chrome pls.
 
 .keystone
     width 32px
 
 .display-flex
     display inline-flex
+
+.blank-space
+    height 75px
+
+.border-seperator
+    border-right 1px solid #ccc
+
+.extra-space
+    padding-bottom 9px
