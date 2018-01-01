@@ -70,63 +70,69 @@ html(lang='en')
         br
         img#profile-icon(src='http://ddragon.leagueoflegends.com/cdn/' + version + '/img/profileicon/' + userData.summonerInfo.iconId + '.png', width='150px')
         hr
-        h1 You are...
+        h1 Compared to #{versus}, you are...
         img(src="./images/bronze.png")
         h1 Bronze #{rank}!
         hr
         h3 Here's how you scored in each aspect: 
         hr
         #pinks
+          h4 Pink Wards
           svg#pink-wards
           if (userData.match.pinksPlaced < proData.match.pinksPlaced)
-            p You might have an above par winrate against Shaco if you spent a little extra gold... Your pink ward count was #{userData.match.pinksPlaced} and #{proData.summonerInfo.name}'s is #{proData.match.pinksPlaced}.
+            p You might have an above par winrate against Shaco if you spent a little extra gold... Your pink ward count was #{userData.match.pinksPlaced} and #{versus}'s is #{proData.match.pinksPlaced}.
           else
-            p Are you even placing those correctly? Your pink ward count was #{userData.match.pinksPlaced} and #{proData.summonerInfo.name}'s is #{proData.match.pinksPlaced}.
+            p Are you even placing those correctly? Your pink ward count was #{userData.match.pinksPlaced} and #{versus}'s is #{proData.match.pinksPlaced}.
           p You scored Bronze #{scores.pinksPlaced}. #{messages.pinksPlaced}
           hr
+        h4 Normal Wards
         svg#green-wards
         if (userData.match.wardsPlaced < proData.match.wardsPlaced)
-          p No wonder you struggle against Rengar... Your ward count was #{userData.match.wardsPlaced} and #{proData.summonerInfo.name}'s is #{proData.match.wardsPlaced}.
+          p No wonder you struggle against Rengar... Your ward count was #{userData.match.wardsPlaced} and #{versus}'s is #{proData.match.wardsPlaced}.
         else
-          p Sitting in the fountain spamming sightstone isn't something to be proud of. Your ward count was #{userData.match.wardsPlaced} and #{proData.summonerInfo.name}'s is #{proData.match.wardsPlaced}.
+          p Sitting in the fountain spamming sightstone isn't something to be proud of. Your ward count was #{userData.match.wardsPlaced} and #{versus}'s is #{proData.match.wardsPlaced}.
         p You scored Bronze #{scores.wardsPlaced}. #{messages.wardsPlaced}
         hr
         if (userKDA == Infinity)
           img(src="./images/poro-laugh.png", width='150px')
           p WHAT THE FUCK. Perfect KDA. Bronze 1. Have a happy poro.
         else
+          h4 KDA
           svg#kda
           if (userKDA < proKDA)
-            p Insert memey subpar KDA sentence here. Your KDA was #{userKDA} and #{proData.summonerInfo.name}'s is #{proKDA}.
+            p Insert memey subpar KDA sentence here. Your KDA was #{userKDA} and #{versus}'s is #{proKDA}.
           else
-            p Insert memey above par KDA sentence here. Your KDA was #{userKDA} and #{proData.summonerInfo.name}'s is #{proKDA}.
+            p Seems the API is wrong. It says you aren't a Tryndamere with 6 GA's... Your KDA was #{userKDA} and #{versus}'s is #{proKDA}.
           p You scored Bronze #{scores.kda}. #{messages.kda}
         hr
+        h4 Creepscore
         svg#creep-score
         if (userData.match.creepScore < proData.match.creepScore)
-          p Insert memey subpar CS sentence here. Your CS was #{userData.match.creepScore} and #{proData.summonerInfo.name}'s is #{proData.match.creepScore}.
+          p Insert memey subpar CS sentence here. Your CS was #{userData.match.creepScore} and #{versus}'s is #{proData.match.creepScore}.
         else
-          p Insert memey above par CS sentence here. Your CS was #{userData.match.creepScore} and #{proData.summonerInfo.name}'s is #{proData.match.creepScore}.
+          p Insert memey above par CS sentence here. Your CS was #{userData.match.creepScore} and #{versus}'s is #{proData.match.creepScore}.
         p You scored Bronze #{scores.creepScore}. #{messages.creepScore}
         hr
+        h4 Runes
         svg#runes
           div
             if (scores.runes < 5)
               p.display-flex Insert memey subpar Runes sentence here.
             else
               p.display-flex Insert memey above par Runes sentence here.
-            p.display-flex Your keystone was
+            p.display-flex &nbsp;Your keystone was
             img.keystone.display-flex(src="./images/runes/" + userData.match.perks.perk0Id + ".png")
-            p.display-flex #{userKeystone} and #{proData.summonerInfo.name}'s is 
+            p.display-flex #{userKeystone} and #{versus}'s is 
             img.keystone.display-flex(src="./images/runes/" + proData.match.perks.perk0Id + ".png")
             p.display-flex #{proKeystone}. You shared #{scores.runeMatches} runes.
             p You scored Bronze #{scores.runes}. #{messages.runes}
         hr
+        h4 Gold Earned
         svg#gold-earned
         if (scores.goldEarned < 5)
-          p Insert memey subpar gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and #{proData.summonerInfo.name}'s is #{proData.match.goldEarned}.
+          p Insert memey subpar gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and #{versus}'s is #{proData.match.goldEarned}.
         else
-          p Insert memey above par gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and #{proData.summonerInfo.name}'s is #{proData.match.goldEarned}.
+          p Insert memey above par gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and #{versus}'s is #{proData.match.goldEarned}.
         p You scored Bronze #{scores.goldEarned}. #{messages.goldEarned}
         hr   
     footer.footer

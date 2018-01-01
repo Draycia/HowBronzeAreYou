@@ -47,50 +47,48 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res) {
-  if (req.query.summonerName && req.query.otherSummoner) {
-    let userRegion = 'na';
-    let region = 'na1';
-    let otherRegion = 'na1';
-    if (req.subdomains[0]) {
-      region = util.getRegion(req.subdomains[0]);
-      userRegion = req.subdomains[0];
-    }
-    if (req.query.region) region = util.getRegion(req.query.region);
-    if (req.query.otherRegion) otherRegion = util.getRegion(req.query.otherRegion);
+  let userRegion = req.subdomains[0] || 'na';
+  let userRegionSan = util.getRegion(userRegion);
+  let comparisonRegion = req.query.otherRegion || 'na';
+  let comparisonRegionSan = util.getRegion(comparisonRegion);
 
-    util.getMatch(urlencode(req.query.summonerName), region).then(userData => {
-      if (!userData.isSet) {
-        res.render('errors', { error: "Oh no! Seems the poros were released." });
-        return;
-      }
-      util.getMatch(urlencode(req.query.otherSummoner), otherRegion).then(compData => {
-        if (!compData.isSet) {
-          res.render('errors', { error: "Oh no! Seems the poros were released. AAAAAAAAAAA" }); // I know it's ugly. I'm rushing this last day...
-          return;
-        }
-        if (userData.status == 0 && compData.status == 0) {
-          let scores = util.getAllScores(userData, compData);
-          let messages = util.getMessages(scores);
-          let userKDA = util.getKDA(userData);
-          let proKDA = util.getKDA(compData);
-          let rank = util.getAverageScore(scores);
-          let userKeystone = util.getKeystoneName(userData);
-          let proKeystone = util.getKeystoneName(compData);
-          let version = util.getVersion();
-          res.render('summoner', { version: version, userData: userData, proData: compData, scores: scores, messages: messages, userKDA: userKDA, proKDA: proKDA, rank: rank, userKeystone: userKeystone, proKeystone: proKeystone, region: userRegion });
-        } else if (userData.status == 1 || compData.status == 1) {
+  if (req.query.summonerName && req.query.otherSummoner) {
+    util.getMatch(urlencode(req.query.summonerName), userRegionSan).then(userData => {
+      if (!userData.isSet) return res.render('errors', { error: 'There was an error getting a match for the 1st summoner!' });
+      util.getMatch(urlencode(req.query.otherSummoner), comparisonRegionSan).then(comparisonData => {
+        if (!comparisonData.isSet) return res.render('errors', { error: 'There was an error getting a match for the 2nd summoner!' });
+        if (userData.status == 0 && comparisonData.status == 0) {
+          renderSummoner(userData, comparisonData, res, true, userRegion);
+        } else if (userData.status == 1 || comparisonData.status == 1) {
           res.render('errors', { error: "Seems one of the summoners doesn't exist..." });
-        } else if (userData.status == 2 || compData.status == 2) {
+        } else if (userData.status == 2 || comparisonData.status == 2) {
           res.render('errors', { error: "Seems one of the summoners doesn't have any recent games on Summoner's Rift..." });
         } else {
           res.render('error');
         }
-      })
+      });
+    });
+  } else if (req.query.summonerName) {
+    util.getMatch(urlencode(req.query.summonerName), userRegionSan).then(userData => {
+      if (!userData.isSet) return res.render('errors', { error: 'There was an error getting a match for your summoner!' });
+      if (userData.status == 0) {
+        let champData = util.getChampData().data[`${userData.match.championId}`];
+        if (!champData) return res.render('errors', { error: "Seems we failed to obtain information on the champion you last played in Summoner's Rift... :(" });
+        //console.log(champData);
+        let comparisonData = util.getDataFromCGG(champData);
+        renderSummoner(userData, comparisonData, res, false, userRegion);
+        //res.render('index', { region: userRegion });
+        //renderSummoner(userData, null, res, false, userRegion);
+      } else if (userData.status == 1) {
+        res.render('errors', { error: "Seems that summoner doesn't exist..." });
+      } else if (userData.status == 2) {
+        res.render('errors', { error: "Seems that summoner doesn't have any recent games on Summoner's Rift..." });
+      } else {
+        res.render('error');
+      }
     });
   } else {
-    let region = 'na';
-    if (req.subdomains[0]) region = req.subdomains[0];
-    res.render('index', { region: region });
+    res.render('index', { region: userRegion });
   }
 });
 
@@ -107,5 +105,18 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+function renderSummoner(userData, compareData, res, isSVS, region) {
+  let scores = util.getAllScores(userData, compareData);
+  let messages = util.getMessages(scores);
+  let userKDA = util.getKDA(userData);
+  let proKDA = util.getKDA(compareData);
+  let rank = util.getAverageScore(scores);
+  let userKeystone = util.getKeystoneName(userData);
+  let proKeystone = util.getKeystoneName(compareData);
+  let version = util.getVersion();
+  let versus = isSVS ? `${compareData.summonerInfo.name}` : 'the average challenger player';
+  res.render('summoner', { version, userData, proData: compareData, scores, messages, userKDA, proKDA, rank, userKeystone, proKeystone, region, versus });
+}
+
 module.exports = app;
-module.exports.champData = champData;

@@ -11,6 +11,12 @@ const queues = require('./queues.js').queues;
 const Repeat = require('repeat');
 const request = require('request');
 
+let champData;
+
+function getChampData() {
+  return champData;
+}
+
 function decimalRound(number, precision){
   let factor = Math.pow(10, precision);
   let tempNumber = number * factor;
@@ -62,8 +68,6 @@ async function getMatch(summonerName, region) {
     "status": 0,
     "isSet": false
   }
-
-  console.log("summoner name: " + summonerName + ", region: " + region);
 
   let summonerInfo = await api.get(region, "summoner.getBySummonerName", summonerName);
 
@@ -132,7 +136,7 @@ async function getMatch(summonerName, region) {
 }
 
 function createChampFile() {
-  cGG.get("champion.getAllChampions", {"champData": ["kda", "damage", "minions", "wards", "goldEarned", "hashes"]}).then(data => {
+  cGG.get("champion.getAllChampions", { "limit": "1000", "champData": ["kda", "damage", "minions", "wards", "goldEarned", "hashes"]}).then(data => {
     let dumpObjects = {data: []};
     let matchArray = [];
     // hi rito owo
@@ -158,25 +162,52 @@ function createChampFile() {
         let hash = ezData.hashes.runehash.highestCount;
         let runeIds = hash.hash.replace(/-/g, " ").split(" ");
 
-        for (let i = 0; i < runes.length; i++) {
+        for (let i = 0; i < runeIds.length; i++) {
           dumpObjects.data[`${champId}`].runes[i] = runeIds[i];
         }
       } else if (matchArray.includes(champId)) {
-        console.log("There was a repeat while writing to the champStats.json file. Don't worry, this isn't an error. I just needed something to put in an else if statement. Hi mom!");
+        //console.log("STOP SPAMMING SO MUCH. AAAAAAAAAAAAAAAAAAAAAAAAA.");
       } else {
         console.log("lol that screwed");
       }
     }
-    app.champData = dumpObjects;
+    champData = dumpObjects;
 
   }).then(console.log("Champ stats have been updated. Time: " + Date.now())).catch(err => console.log("There was an error: \n" + err));
+}
+
+function getDataFromCGG(champData) {
+  returnData = {
+    "match": {
+      "perks": {}
+    },
+    "status": 0,
+    "isSet": false
+  }
+
+  for (let i = 1; i < champData.runes.length; i++) {
+    returnData.match.perks[`perk${i - 1}Id`] = champData.runes[i];
+  }
+
+  returnData.match.championId = champData.champId;
+  returnData.match.kills = champData.kills;
+  returnData.match.deaths = champData.deaths;
+  returnData.match.assists = champData.assists;
+  returnData.match.wardsPlaced = champData.wardsPlaced;
+  returnData.match.pinksPlaced = 0 // :(
+  returnData.match.goldEarned = champData.goldEarned;
+  returnData.match.creepScore = champData.creepScore;
+  returnData.isSet = true;
+
+  console.log(returnData);
+  return returnData;
 }
 
 function getAllScores(userData, proData) {
   let userKDA = getKDA(userData);
   let proKDA = getKDA(proData);
 
-  let dataObject = {}
+  let dataObject = {};
 
   dataObject.pinksPlaced = getScore(userData.match.pinksPlaced, proData.match.pinksPlaced);
   dataObject.wardsPlaced = getScore(userData.match.wardsPlaced, proData.match.wardsPlaced);
@@ -267,7 +298,6 @@ function getMessages(scores) {
 // }
 
 function getKeystoneName(userData) {
-  let keystoneType = userData.match.perks.mainPerk;
   let keystoneId = userData.match.perks.perk0Id;
   for (let i = 0; i < Object.keys(runesReforged).length; i++) {
     if (runesReforged[i].id == keystoneId) {
@@ -353,5 +383,7 @@ module.exports = {
   getRegion: getRegion,
   getKeystoneName: getKeystoneName,
   getVersion: getVersion,
-  init: init
+  init: init,
+  getChampData: getChampData,
+  getDataFromCGG: getDataFromCGG
 }
