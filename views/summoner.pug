@@ -108,7 +108,10 @@ html(lang='en')
           h4 KDA
           svg#kda
           if (userKDA < proKDA)
-            p Insert memey subpar KDA sentence here. Your KDA was #{userKDA} and #{versus}'s is #{proKDA}.
+            if (region == 'na')
+              p Are you colorblind? Do you not notice your screen turning grey? Your KDA was #{userKDA} and #{versus}'s is #{proKDA}.
+            else
+              p Are you colourblind? Do you not notice your screen turning grey? Your KDA was #{userKDA} and #{versus}'s is #{proKDA}.
           else
             p Seems the API is wrong. It says you aren't a Tryndamere with 6 GA's... Your KDA was #{userKDA} and #{versus}'s is #{proKDA}.
           p You scored Bronze #{scores.kda}. #{messages.kda}
@@ -118,7 +121,7 @@ html(lang='en')
         if (userData.match.creepScore < proData.match.creepScore)
           p Insert memey subpar CS sentence here. Your CS was #{userData.match.creepScore} and #{versus}'s is #{proData.match.creepScore}.
         else
-          p Insert memey above par CS sentence here. Your CS was #{userData.match.creepScore} and #{versus}'s is #{proData.match.creepScore}.
+          p Let me guess, you play Nasus often? Your CS was #{userData.match.creepScore} and #{versus}'s is #{proData.match.creepScore}.
         p You scored Bronze #{scores.creepScore}. #{messages.creepScore}
         hr
         h4 Runes
@@ -138,9 +141,9 @@ html(lang='en')
         h4 Gold Earned
         svg#gold-earned
         if (scores.goldEarned < 5)
-          p Insert memey subpar gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and #{versus}'s is #{proData.match.goldEarned}.
+          p Since you can't even get silver, I'm not too surprised you can't get gold. Your gold earned was #{userData.match.goldEarned} and #{versus}'s is #{proData.match.goldEarned}.
         else
-          p Insert memey above par gold earned sentence here. Your gold earned was #{userData.match.goldEarned} and #{versus}'s is #{proData.match.goldEarned}.
+          p I wonder what'll happen if you make use of all that gold... Your gold earned was #{userData.match.goldEarned} and #{versus}'s is #{proData.match.goldEarned}.
         p You scored Bronze #{scores.goldEarned}. #{messages.goldEarned}
         hr   
     footer.footer

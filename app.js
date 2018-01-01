@@ -74,11 +74,8 @@ app.get('/', function(req, res) {
       if (userData.status == 0) {
         let champData = util.getChampData().data[`${userData.match.championId}`];
         if (!champData) return res.render('errors', { error: "Seems we failed to obtain information on the champion you last played in Summoner's Rift... :(" });
-        //console.log(champData);
         let comparisonData = util.getDataFromCGG(champData);
         renderSummoner(userData, comparisonData, res, false, userRegion);
-        //res.render('index', { region: userRegion });
-        //renderSummoner(userData, null, res, false, userRegion);
       } else if (userData.status == 1) {
         res.render('errors', { error: "Seems that summoner doesn't exist..." });
       } else if (userData.status == 2) {

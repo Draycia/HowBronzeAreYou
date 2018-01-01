@@ -36,17 +36,17 @@ const kdaMessage = [
 
 const csMessage = [
     "", // This line intentionally left blank
+    "Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q",
     "",
-    "",
-    "",
-    "",
+    "Faker actually last hits minions. Be more like Faker.",
+    "You do know minions are basically pinatas filled with gold, right?",
     "Take lessons from those minions. They probably have better cs than you do."
 ]
 
 const runesMessage = [
     "", // This line intentionally left blank
     "Nice job blindly copying pages!",
-    "",
+    "You seem like the kind of person who would take Manaflow Band on Yasuo just because Faker did it.",
     "Did you use Ultimate Bravery or something??",
     "Are you mental? Did you make this page blindfolded?",
     "I'm all for off-meta builds but this is too much, dude."
@@ -55,9 +55,9 @@ const runesMessage = [
 const goldMessage = [
     "", // This line intentionally left blank
     "Are you sure you're not the shop keeper?",
-    "Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q Q",
+    "Get a support item and klepto and you might get some items...",
     "Right click, not left.",
-    "Get a support item and klepto. gg ez.",
+    "If you get Future's Market you might be able to afford a longsword before the end of the game.",
     "Maybe you're better off playing support if you're not already."
 ]
 
