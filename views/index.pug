@@ -39,14 +39,22 @@ html(lang='en')
             a(href='#')
               form#comparisonForm.navbar-form(action='/', method='GET')
                 .input-group
-                  input#comparisonSummonerOne.search-query.form-control(type='text', placeholder='Your   summoner  name!', name='summonerName')
+                  input#comparisonSummonerOne.search-query.form-control(type='text', placeholder='Your  summoner name!', name='summonerName')
                   |     
                   .input-group-btn
                     button.btn.btn-default(type='submit')
                       i.glyphicon.glyphicon-search
                 select#comparisonRegionOne.form-control(name='region')
                   option.na(value='na') NA
+                  option.br(value='br') BR
+                  option.eune(value='euw') EUNE
                   option.euw(value='euw') EUW
+                  option.jp(value='jp') JP
+                  option.kr(value='kr') KR
+                  option.lan(value='lan') LAN
+                  option.las(value='las') LAS
+                  option.oce(value='oce') OCE
+                  option.ru(value='ru') RU
                 br
                 .input-group
                   input#comparisonSummonerTwo.search-query.form-control(type='text', placeholder='Their summoner name!', name='otherSummoner')
@@ -56,21 +64,36 @@ html(lang='en')
                       i.glyphicon.glyphicon-search
                 select#comparisonRegionTwo.form-control(name='region')
                   option.na(value='na') NA
+                  option.br(value='br') BR
+                  option.eune(value='euw') EUNE
                   option.euw(value='euw') EUW
+                  option.jp(value='jp') JP
+                  option.kr(value='kr') KR
+                  option.lan(value='lan') LAN
+                  option.las(value='las') LAS
+                  option.oce(value='oce') OCE
+                  option.ru(value='ru') RU
         .col-lg-6
           ul.nav.navbar-nav.fix-left-form
             .text-center.fix-left-text
               p.extra-space Want to compare your stats VS the average high elo<br>player? Use me!
             a(href='#')
-              fieldset(disabled='disabled')
-                form#inputForm.navbar-form(action='/', method='GET')
-                  .input-group
-                    input#inputSummoner.search-query.form-control(type='text', placeholder='Search', name='summonerName')
-                    |     
-                    .input-group-btn
-                      button.btn.btn-default(type='submit')
-                        i.glyphicon.glyphicon-search
-                  select#inputRegion.form-control(name='region')
-                    option.na(value='na') NA
-                    option.euw(value='euw') EUW
+              form#inputForm.navbar-form(action='/', method='GET')
+                .input-group
+                  input#inputSummoner.search-query.form-control(type='text', placeholder='Search', name='summonerName')
+                  |     
+                  .input-group-btn
+                    button.btn.btn-default(type='submit')
+                      i.glyphicon.glyphicon-search
+                select#inputRegion.form-control(name='region')
+                  option.na(value='na') NA
+                  option.br(value='br') BR
+                  option.eune(value='euw') EUNE
+                  option.euw(value='euw') EUW
+                  option.jp(value='jp') JP
+                  option.kr(value='kr') KR
+                  option.lan(value='lan') LAN
+                  option.las(value='las') LAS
+                  option.oce(value='oce') OCE
+                  option.ru(value='ru') RU
     footer.text-center.footer-absolute How Bronze Are You? isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.

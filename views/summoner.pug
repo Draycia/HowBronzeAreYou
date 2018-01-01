@@ -61,8 +61,16 @@ html(lang='en')
                   button.btn.btn-default(type='submit')
                     i.glyphicon.glyphicon-search
               select#inputRegion.form-control.fix-region-button(name='region')
-                option.na(selected='', value='na') NA
+                option.na(value='na') NA
+                option.br(value='br') BR
+                option.eune(value='euw') EUNE
                 option.euw(value='euw') EUW
+                option.jp(value='jp') JP
+                option.kr(value='kr') KR
+                option.lan(value='lan') LAN
+                option.las(value='las') LAS
+                option.oce(value='oce') OCE
+                option.ru(value='ru') RU
     .container
       .text-center
         h1#summonerName= userData.summonerInfo.name
