@@ -1,2 +1,5 @@
 node_modules/
 bin/configuration.js
+bin/champStats.json
+public/images/runes/
+public/stylesheets/style.css
